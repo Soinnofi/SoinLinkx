@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SoinLinkx OS v2.0 - Полноценная веб-ОС</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Загрузочный экран с анимацией -->
+    <div id="boot-screen">
+        <div class="boot-logo">
+            <span class="logo-soin">Soin</span><span class="logo-linkx">Linkx</span>
+        </div>
+        <div class="boot-progress-container">
+            <div class="boot-progress-bar" id="bootProgress"></div>
+        </div>
+        <div class="boot-status" id="bootStatus">Инициализация ядра...</div>
+        <div class="boot-details" id="bootDetails"></div>
+        <div class="boot-version">Версия 2.0.0 | Сборка 2024</div>
+    </div>
+
+    <!-- Экран первоначальной настройки -->
+    <div id="setup-screen" class="hidden">
+        <div class="setup-container animated-slide-up">
+            <div class="setup-header">
+                <div class="setup-logo">SoinLinkx</div>
+                <h1>Добро пожаловать!</h1>
+                <p>Создайте аккаунт для начала работы</p>
+            </div>
+            
+            <form id="setup-form" class="setup-form">
+                <div class="form-group">
+                    <label for="username">Имя пользователя</label>
+                    <input type="text" id="username" placeholder="Введите имя" required autocomplete="off">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Пароль</label>
+                    <input type="password" id="password" placeholder="Введите пароль" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirm-password">Подтверждение пароля</label>
+                    <input type="password" id="confirm-password" placeholder="Повторите пароль" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email (для синхронизации)</label>
+                    <input type="email" id="email" placeholder="example@mail.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="theme">Тема оформления</label>
+                    <select id="theme">
+                        <option value="dark">Темная (Classic)</option>
+                        <option value="light">Светлая (Daylight)</option>
+                        <option value="soin">SoinUI (Mobile Style)</option>
+                        <option value="hacker">Хакерская (Green)</option>
+                        <option value="amethyst">Аметист (Purple)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group checkbox-group">
+                    <label>
+                        <input type="checkbox" id="sync-cloud" checked> 
+                        Включить облачную синхронизацию
+                    </label>
+                </div>
+                
+                <div class="form-group checkbox-group">
+                    <label>
+                        <input type="checkbox" id="agree-terms" required> 
+                        Я принимаю условия использования
+                    </label>
+                </div>
+                
+                <button type="submit" class="setup-btn" id="setupBtn">
+                    <span>Создать аккаунт</span>
+                    <div class="btn-loader hidden"></div>
+                </button>
+            </form>
+            
+            <div class="setup-footer">
+                <p>Уже есть аккаунт? <a href="#" id="show-login">Войти</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Экран входа -->
+    <div id="login-screen" class="hidden">
+        <div class="setup-container animated-slide-up">
+            <div class="setup-header">
+                <div class="setup-logo">SoinLinkx</div>
+                <h2>Вход в систему</h2>
+            </div>
+            
+            <form id="login-form" class="setup-form">
+                <div class="form-group">
+                    <label for="login-username">Имя пользователя</label>
+                    <input type="text" id="login-username" placeholder="Введите имя" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="login-password">Пароль</label>
+                    <input type="password" id="login-password" placeholder="Введите пароль" required>
+                </div>
+                
+                <button type="submit" class="setup-btn">
+                    Войти
+                </button>
+            </form>
+            
+            <div class="setup-footer">
+                <p>Нет аккаунта? <a href="#" id="show-signup">Создать</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Рабочий стол -->
+    <div id="desktop" class="hidden">
+        <!-- Верхняя панель -->
+        <div id="topbar">
+            <div class="topbar-left">
+                <div class="app-menu-button" onclick="toggleAppMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <div class="workspace-indicator">Рабочий стол 1</div>
+            </div>
+            
+            <div class="topbar-center">
+                <div class="search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" placeholder="Поиск приложений, файлов..." id="global-search">
+                </div>
+            </div>
+            
+            <div class="topbar-right">
+                <div class="network-indicator" id="networkIndicator" title="Состояние сети">
+                    <span class="network-dot"></span>
+                    <span>Онлайн</span>
+                </div>
+                
+                <div class="sound-indicator" onclick="toggleSoundMenu()">
+                    <span id="soundIcon">🔊</span>
+                </div>
+                
+                <div class="battery-indicator">
+                    <span id="batteryIcon">🔋</span>
+                    <span id="batteryPercent">100%</span>
+                </div>
+                
+                <div class="datetime" onclick="showCalendar()">
+                    <div class="time" id="clock"></div>
+                    <div class="date" id="date"></div>
+                </div>
+                
+                <div class="user-menu" onclick="toggleUserMenu()">
+                    <div class="user-avatar" id="userAvatar">
+                        <span id="userInitial"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Меню приложений (аналог пуска) -->
+        <div id="app-menu" class="hidden">
+            <div class="app-menu-header">
+                <div class="app-menu-search">
+                    <input type="text" placeholder="Поиск приложений..." id="app-search">
+                </div>
+            </div>
+            
+            <div class="app-menu-categories">
+                <div class="category-item active" data-category="all">Все</div>
+                <div class="category-item" data-category="system">Системные</div>
+                <div class="category-item" data-category="multimedia">Мультимедиа</div>
+                <div class="category-item" data-category="office">Офис</div>
+                <div class="category-item" data-category="games">Игры</div>
+                <div class="category-item" data-category="dev">Разработка</div>
+            </div>
+            
+            <div class="app-menu-grid" id="appGrid">
+                <!-- Приложения будут добавлены через JS -->
+            </div>
+            
+            <div class="app-menu-footer">
+                <div class="power-options">
+                    <span onclick="showShutdownDialog()" title="Выключение">⏻</span>
+                    <span onclick="showRestartDialog()" title="Перезагрузка">⟲</span>
+                    <span onclick="lockScreen()" title="Заблокировать">🔒</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Панель быстрого запуска -->
+        <div id="quick-launch">
+            <div class="quick-launch-icons">
+                <div class="quick-icon" onclick="launchApp('file-manager')" title="Файловый менеджер">📁</div>
+                <div class="quick-icon" onclick="launchApp('terminal')" title="Терминал">💻</div>
+                <div class="quick-icon" onclick="launchApp('browser')" title="Браузер">🌐</div>
+                <div class="quick-icon" onclick="launchApp('store')" title="SoinStore">📱</div>
+                <div class="quick-icon" onclick="launchApp('soin-ui')" title="SoinUI">📲</div>
+            </div>
+        </div>
+
+        <!-- Рабочая область с иконками -->
+        <div id="desktop-workspace">
+            <div class="desktop-icons" id="desktopIcons">
+                <!-- Иконки будут добавлены через JS -->
+            </div>
+            
+            <!-- Контекстное меню рабочего стола -->
+            <div id="desktop-context-menu" class="context-menu hidden">
+                <div class="context-menu-item" onclick="createNewFolder()">📁 Новая папка</div>
+                <div class="context-menu-item" onclick="createNewFile()">📄 Новый файл</div>
+                <div class="context-menu-divider"></div>
+                <div class="context-menu-item" onclick="refreshDesktop()">🔄 Обновить</div>
+                <div class="context-menu-item" onclick="openTerminal()">💻 Открыть терминал</div>
+                <div class="context-menu-divider"></div>
+                <div class="context-menu-item" onclick="changeWallpaper()">🖼️ Сменить обои</div>
+                <div class="context-menu-item" onclick="openSettings()">⚙️ Настройки</div>
+            </div>
+        </div>
+
+        <!-- Контейнер для окон -->
+        <div id="windows-container"></div>
+
+        <!-- Уведомления -->
+        <div id="notification-container"></div>
+
+        <!-- Панель задач -->
+        <div id="taskbar">
+            <div class="taskbar-items" id="taskbarItems"></div>
+            
+            <div class="system-tray-extended">
+                <div class="tray-icon" onclick="showNotifications()" title="Уведомления">🔔</div>
+                <div class="tray-icon" onclick="showNetworkMenu()" title="Сеть">📶</div>
+                <div class="tray-icon" onclick="showVolumeMenu()" title="Громкость">🔊</div>
+                <div class="tray-icon" onclick="showBluetoothMenu()" title="Bluetooth">📡</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Диалог завершения работы -->
+    <div id="shutdown-dialog" class="modal-dialog hidden">
+        <div class="modal-content">
+            <div class="modal-header">Завершение работы</div>
+            <div class="modal-body">
+                <p>Вы действительно хотите выйти из системы?</p>
+                <p class="warning-text">Несохраненные данные будут потеряны</p>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeShutdownDialog()">Отмена</button>
+                <button onclick="shutdown()" class="danger-btn">Завершить работу</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Диалог ошибки -->
+    <div id="error-dialog" class="modal-dialog hidden">
+        <div class="modal-content error-modal">
+            <div class="modal-header error-header">
+                <span>⚠️ Системная ошибка</span>
+                <span class="error-code-badge" id="errorCodeBadge"></span>
+            </div>
+            <div class="modal-body">
+                <div id="errorIcon" class="error-icon">❌</div>
+                <div id="errorMessage" class="error-message"></div>
+                <div id="errorDetails" class="error-details"></div>
+                <div class="error-suggestion" id="errorSuggestion"></div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="copyErrorDetails()">📋 Копировать</button>
+                <button onclick="closeErrorDialog()">Закрыть</button>
+                <button onclick="sendErrorReport()" class="primary-btn">Отправить отчет</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Окно загрузки файлов -->
+    <div id="upload-progress" class="upload-progress hidden">
+        <div class="upload-header">Загрузка файлов</div>
+        <div class="upload-item" id="uploadItem">
+            <div class="upload-filename" id="uploadFilename"></div>
+            <div class="upload-progress-bar-container">
+                <div class="upload-progress-bar" id="uploadProgressBar"></div>
+            </div>
+            <div class="upload-speed" id="uploadSpeed"></div>
+        </div>
+    </div>
+
+    <script src="os.js"></script>
+</body>
+</html>
